@@ -1,0 +1,64 @@
+---
+title: "HW5_wl2779"
+author: "Wenyi"
+date: "11/18/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r setup}
+library(tidyverse)
+library(tidyr)
+library(rvest)
+library(stringr)
+library(httr)
+```
+
+##Problem2
+
+```{r data_import}
+setwd("~/Desktop/p8105_hw5_wl2779/data")
+fnames=list.files(pattern="*.csv")
+myfile=lapply(fnames, read.csv)
+result=do.call(rbind, myfile)
+
+myfile_df=
+  tibble(
+    data=myfile,
+    arm = substring(fnames, 1,3),
+    ID = substring(fnames, 1,6))%>%
+```
+
+##notes:
+I tried setwd ("./data") but failed. That showed "Error in setwd("./data") : cannot change working directory". Confused about that.
+
+
+```{r}
+myfile_df
+```
+
+
+
+```{r}
+myfile_df%>%
+  mutate(arm = if_else(arm == "con","control arm", "experimental arm")) %>%
+  unnest(cols = data) %>%
+  select(-fnames) %>%
+  pivot_longer(myfile_df,cols = week_1:week_8, names_to = "fu_time", names_prefix = "week_", values_to = "value")
+  
+knitr::kable(myfile_df[1:10, ])
+```
+```{r}
+rlang::last_error()
+```
+
+
+
+
+
+
+
+
